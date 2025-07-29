@@ -5,12 +5,58 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* Dark theme variables (default) */
+    --bg-gradient-start: #1e1e1e;
+    --bg-gradient-end: #2d2d2d;
+    --text-color: #ffffff;
+    --text-secondary: #cccccc;
+    --primary-color: #FFD700;
+    --accent-color: #4CAF50;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --input-bg: #2C2C2C;
+    --input-border: rgba(255, 255, 255, 0.2);
+    --button-bg: #333333;
+    --button-hover: #444444;
+}
+
+[data-theme="light"] {
+    /* Light theme variables */
+    --bg-gradient-start: #f5f5f5;
+    --bg-gradient-end: #e0e0e0;
+    --text-color: #333333;
+    --text-secondary: #666666;
+    --primary-color: #1976D2;
+    --accent-color: #388E3C;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --card-border: rgba(0, 0, 0, 0.1);
+    --input-bg: #ffffff;
+    --input-border: rgba(0, 0, 0, 0.2);
+    --button-bg: #e8e8e8;
+    --button-hover: #d0d0d0;
+}
+
+[data-theme="light"] .calculator-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .theme-toggle-btn {
+    background: #FF9800;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+}
+
+[data-theme="light"] .theme-toggle-btn:hover {
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+}
+
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    color: var(--text-color);
     min-height: 100vh;
     padding: 20px;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .container {
@@ -23,22 +69,54 @@ body {
     text-align: center;
     margin-bottom: 40px;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card-bg);
     border-radius: 15px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--card-border);
+    position: relative;
+}
+
+.header-content {
+    position: relative;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: -10px;
+    right: 0;
+}
+
+.theme-toggle-btn {
+    background: var(--accent-color);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
 
 .header h1 {
     font-size: 2.5rem;
-    color: #FFD700;
+    color: var(--primary-color);
     margin-bottom: 10px;
     text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
 }
 
 .header p {
     font-size: 1.1rem;
-    color: #cccccc;
+    color: var(--text-secondary);
 }
 
 /* Calculator Selector */
@@ -50,46 +128,46 @@ body {
 }
 
 .calculator-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card-bg);
     border-radius: 15px;
     padding: 30px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--card-border);
     backdrop-filter: blur(10px);
 }
 
 .calculator-card:hover {
     transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--card-bg);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .card-icon {
     font-size: 3rem;
-    color: #4CAF50;
+    color: var(--accent-color);
     margin-bottom: 20px;
 }
 
 .calculator-card h3 {
     font-size: 1.5rem;
-    color: #FFD700;
+    color: var(--primary-color);
     margin-bottom: 15px;
 }
 
 .calculator-card p {
-    color: #cccccc;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 
 /* Calculator Container */
 .calculator-container {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card-bg);
     border-radius: 15px;
     padding: 30px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--card-border);
 }
 
 .calculator-header {
@@ -98,17 +176,17 @@ body {
     align-items: center;
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--card-border);
 }
 
 .calculator-header h2 {
-    color: #FFD700;
+    color: var(--primary-color);
     font-size: 1.8rem;
 }
 
 .back-btn {
-    background: #333333;
-    color: #ffffff;
+    background: var(--button-bg);
+    color: var(--text-color);
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
@@ -118,7 +196,7 @@ body {
 }
 
 .back-btn:hover {
-    background: #444444;
+    background: var(--button-hover);
     transform: translateX(-2px);
 }
 
@@ -139,8 +217,8 @@ body {
     font-weight: bold;
     text-align: right;
     padding: 20px;
-    background: #2C2C2C;
-    color: #FFD700;
+    background: var(--input-bg);
+    color: var(--primary-color);
     border: none;
     border-radius: 10px;
     outline: none;
@@ -151,13 +229,13 @@ body {
 }
 
 .history-section h4 {
-    color: #FFD700;
+    color: var(--primary-color);
     margin-bottom: 10px;
     font-size: 1.2rem;
 }
 
 .history-box {
-    background: #2C2C2C;
+    background: var(--input-bg);
     border-radius: 8px;
     padding: 15px;
     height: 120px;
@@ -165,6 +243,7 @@ body {
     font-family: monospace;
     font-size: 0.9rem;
     line-height: 1.5;
+    color: var(--text-color);
 }
 
 .clear-history-btn {
@@ -202,27 +281,27 @@ body {
 }
 
 .btn-number {
-    background: #333333;
-    color: #FFD700;
+    background: var(--button-bg);
+    color: var(--primary-color);
 }
 
 .btn-number:hover {
-    background: #444444;
+    background: var(--button-hover);
     transform: scale(1.05);
 }
 
 .btn-operator {
-    background: #333333;
-    color: #FFD700;
+    background: var(--button-bg);
+    color: var(--primary-color);
 }
 
 .btn-operator:hover {
-    background: #444444;
+    background: var(--button-hover);
     transform: scale(1.05);
 }
 
 .btn-equals {
-    background: #4CAF50;
+    background: var(--accent-color);
     color: #FFFFFF;
     grid-column: span 2;
 }
@@ -259,14 +338,14 @@ body {
 }
 
 .input-section {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card-bg);
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
 }
 
 .input-section h3 {
-    color: #FFD700;
+    color: var(--primary-color);
     margin-bottom: 15px;
     font-size: 1.3rem;
 }
@@ -284,17 +363,17 @@ body {
 }
 
 .input-group label {
-    color: #cccccc;
+    color: var(--text-secondary);
     font-weight: bold;
 }
 
 .input-group input,
 .input-group select {
     padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--input-border);
     border-radius: 8px;
-    background: #2C2C2C;
-    color: #ffffff;
+    background: var(--input-bg);
+    color: var(--text-color);
     font-size: 1rem;
     outline: none;
     transition: border-color 0.3s ease;
@@ -302,16 +381,16 @@ body {
 
 .input-group input:focus,
 .input-group select:focus {
-    border-color: #4CAF50;
+    border-color: var(--accent-color);
 }
 
 #material-select {
     width: 100%;
     padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--input-border);
     border-radius: 8px;
-    background: #2C2C2C;
-    color: #ffffff;
+    background: var(--input-bg);
+    color: var(--text-color);
     font-size: 1rem;
     outline: none;
 }
@@ -329,7 +408,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--card-border);
 }
 
 .result-item:last-child {
@@ -339,22 +418,22 @@ body {
 .result-item.total {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #4CAF50;
+    color: var(--accent-color);
 }
 
 .result-item label {
-    color: #cccccc;
+    color: var(--text-secondary);
 }
 
 .result-item span {
-    color: #FFD700;
+    color: var(--primary-color);
     font-weight: bold;
 }
 
 .calculate-btn {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(45deg, #4CAF50, #45a049);
+    background: linear-gradient(45deg, var(--accent-color), #45a049);
     color: white;
     border: none;
     border-radius: 10px;
@@ -366,7 +445,7 @@ body {
 }
 
 .calculate-btn:hover {
-    background: linear-gradient(45deg, #45a049, #4CAF50);
+    background: linear-gradient(45deg, #45a049, var(--accent-color));
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
 }
@@ -572,20 +651,20 @@ body {
 }
 
 .material-management {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--card-bg);
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
 }
 
 .material-management h3 {
-    color: #FFD700;
+    color: var(--primary-color);
     margin-bottom: 20px;
     font-size: 1.3rem;
 }
 
 .material-management h4 {
-    color: #4CAF50;
+    color: var(--accent-color);
     margin-bottom: 15px;
     font-size: 1.1rem;
 }
@@ -594,7 +673,7 @@ body {
 .remove-material-section {
     margin-bottom: 25px;
     padding: 15px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card-bg);
     border-radius: 8px;
 }
 
@@ -643,19 +722,19 @@ body {
 }
 
 .calculation-history {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--card-bg);
     border-radius: 10px;
     padding: 20px;
 }
 
 .calculation-history h3 {
-    color: #FFD700;
+    color: var(--primary-color);
     margin-bottom: 15px;
     font-size: 1.3rem;
 }
 
 .history-list {
-    background: #2C2C2C;
+    background: var(--input-bg);
     border-radius: 8px;
     padding: 15px;
     height: 200px;
@@ -664,11 +743,12 @@ body {
     font-size: 0.9rem;
     line-height: 1.6;
     margin-bottom: 10px;
+    color: var(--text-color);
 }
 
 .history-item {
     padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--card-border);
 }
 
 .history-item:last-child {
@@ -676,12 +756,12 @@ body {
 }
 
 .history-timestamp {
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.8rem;
 }
 
 .history-calculation {
-    color: #FFD700;
+    color: var(--primary-color);
     margin-top: 2px;
 }
 
