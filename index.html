@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Calculator Suite</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-calculator"></i> Web Calculator Suite</h1>
+            <p>Choose your calculator type</p>
+        </header>
+
+        <div class="calculator-selector">
+            <div class="calculator-card" onclick="showCalculator('basic')">
+                <div class="card-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3>Basic Calculator</h3>
+                <p>Standard arithmetic operations with history</p>
+            </div>
+
+            <div class="calculator-card" onclick="showCalculator('material')">
+                <div class="card-icon">
+                    <i class="fas fa-industry"></i>
+                </div>
+                <h3>Material Price Calculator</h3>
+                <p>Calculate material costs with custom formulas</p>
+            </div>
+        </div>
+
+        <!-- Basic Calculator -->
+        <div id="basic-calculator" class="calculator-container" style="display: none;">
+            <div class="calculator-header">
+                <h2><i class="fas fa-calculator"></i> Basic Calculator</h2>
+                <button class="back-btn" onclick="showSelector()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
+
+            <div class="basic-calc">
+                <div class="display-container">
+                    <input type="text" id="display" class="display" value="0" readonly>
+                </div>
+
+                <div class="history-section">
+                    <h4>History</h4>
+                    <div id="history" class="history-box"></div>
+                    <button id="clear-history" class="clear-history-btn">Clear History</button>
+                </div>
+
+                <div class="button-grid">
+                    <button class="btn btn-number" onclick="inputNumber('7')">7</button>
+                    <button class="btn btn-number" onclick="inputNumber('8')">8</button>
+                    <button class="btn btn-number" onclick="inputNumber('9')">9</button>
+                    <button class="btn btn-operator" onclick="inputOperator('/')">/</button>
+
+                    <button class="btn btn-number" onclick="inputNumber('4')">4</button>
+                    <button class="btn btn-number" onclick="inputNumber('5')">5</button>
+                    <button class="btn btn-number" onclick="inputNumber('6')">6</button>
+                    <button class="btn btn-operator" onclick="inputOperator('*')">*</button>
+
+                    <button class="btn btn-number" onclick="inputNumber('1')">1</button>
+                    <button class="btn btn-number" onclick="inputNumber('2')">2</button>
+                    <button class="btn btn-number" onclick="inputNumber('3')">3</button>
+                    <button class="btn btn-operator" onclick="inputOperator('-')">-</button>
+
+                    <button class="btn btn-number" onclick="inputNumber('0')">0</button>
+                    <button class="btn btn-number" onclick="inputOperator('.')">.</button>
+                    <button class="btn btn-clear" onclick="clearDisplay()">C</button>
+                    <button class="btn btn-operator" onclick="inputOperator('+')">+</button>
+
+                    <button class="btn btn-equals" onclick="calculate()">=</button>
+                    <button class="btn btn-tax" onclick="calculateTax()">Tax 15%</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Material Calculator -->
+        <div id="material-calculator" class="calculator-container" style="display: none;">
+            <div class="calculator-header">
+                <h2><i class="fas fa-industry"></i> Material Price Calculator</h2>
+                <button class="back-btn" onclick="showSelector()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
+
+            <div class="material-calc">
+                <!-- Dimensions Input -->
+                <div class="input-section">
+                    <h3>Dimensions</h3>
+                    <div class="dimension-inputs">
+                        <div class="input-group">
+                            <label for="width">Width (mm):</label>
+                            <input type="number" id="width" step="1" min="0" placeholder="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="height">Height (mm):</label>
+                            <input type="number" id="height" step="1" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Material Selection -->
+                <div class="input-section">
+                    <h3>Material Selection</h3>
+                    <select id="material-select">
+                        <option value="">Select a material...</option>
+                    </select>
+                </div>
+
+                <!-- Results -->
+                <div class="results-section">
+                    <div class="result-item">
+                        <label>Area (mm²):</label>
+                        <span id="area-result">0</span>
+                    </div>
+                    <div class="result-item">
+                        <label>Price per m²:</label>
+                        <span id="price-per-sqm">R 0.00</span>
+                    </div>
+                    <div class="result-item total">
+                        <label>Total Price:</label>
+                        <span id="total-price">R 0.00</span>
+                    </div>
+                </div>
+
+                <!-- Calculate Button -->
+                <button id="calculate-material" class="calculate-btn">
+                    <i class="fas fa-calculator"></i> Calculate Price
+                </button>
+
+                <!-- Total Summary Section -->
+                <div class="total-summary">
+                    <h3>Running Total</h3>
+                    <div class="total-items">
+                        <div id="total-items-list" class="total-items-list"></div>
+                        <div class="total-controls">
+                            <button id="add-to-total" class="add-total-btn">
+                                <i class="fas fa-plus"></i> Add to Total
+                            </button>
+                            <button id="clear-total" class="clear-total-btn">
+                                <i class="fas fa-trash"></i> Clear Total
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="total-calculations">
+                        <div class="total-row">
+                            <label>Subtotal:</label>
+                            <span id="subtotal">R 0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <label>Tax (15%):</label>
+                            <span id="tax-amount">R 0.00</span>
+                        </div>
+                        <div class="total-row grand-total">
+                            <label>Grand Total:</label>
+                            <span id="grand-total">R 0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="total-actions">
+                        <button id="apply-tax" class="tax-btn">
+                            <i class="fas fa-percentage"></i> Apply 15% Tax
+                        </button>
+                        <button id="remove-tax" class="remove-tax-btn">
+                            <i class="fas fa-minus"></i> Remove Tax
+                        </button>
+                        <button id="save-pdf" class="pdf-btn">
+                            <i class="fas fa-file-pdf"></i> Save as PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Material Management -->
+                <div class="material-management">
+                    <h3>Material Management</h3>
+                    
+                    <div class="add-material-section">
+                        <h4>Add New Material</h4>
+                        <div class="add-material-form">
+                            <div class="input-group">
+                                <label for="new-material-name">Material Name:</label>
+                                <input type="text" id="new-material-name" placeholder="Enter material name">
+                            </div>
+                            <div class="input-group">
+                                <label for="material-price">Price per m² (R):</label>
+                                <input type="number" id="material-price" step="0.01" min="0" placeholder="0.00">
+                            </div>
+                            <div class="input-group">
+                                <label for="material-multiplier">Multiplier (optional):</label>
+                                <input type="number" id="material-multiplier" step="0.01" min="0" placeholder="1.00">
+                            </div>
+                            <button id="add-material" class="add-btn">
+                                <i class="fas fa-plus"></i> Add Material
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="remove-material-section">
+                        <h4>Remove Material</h4>
+                        <div class="remove-material-form">
+                            <select id="remove-material-select">
+                                <option value="">Select material to remove...</option>
+                            </select>
+                            <button id="remove-material" class="remove-btn">
+                                <i class="fas fa-trash"></i> Remove Material
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculation History -->
+                <div class="calculation-history">
+                    <h3>Calculation History</h3>
+                    <div id="material-history" class="history-list"></div>
+                    <button id="clear-material-history" class="clear-history-btn">Clear History</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
