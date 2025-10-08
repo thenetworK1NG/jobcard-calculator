@@ -136,15 +136,18 @@ function setupEventListeners() {
     // Material calculator input events
     const widthInput = document.getElementById('width');
     const heightInput = document.getElementById('height');
+    const quantityInput = document.getElementById('quantity');
     const materialSelect = document.getElementById('material-select');
 
     if (widthInput) widthInput.addEventListener('input', updateMaterialCalculation);
     if (heightInput) heightInput.addEventListener('input', updateMaterialCalculation);
+    if (quantityInput) quantityInput.addEventListener('input', updateMaterialCalculation);
     if (materialSelect) materialSelect.addEventListener('change', updateMaterialCalculation);
 
     // Material management buttons
     const addMaterialBtn = document.getElementById('add-material');
     const removeMaterialBtn = document.getElementById('remove-material');
+    const managementActionSelect = document.getElementById('management-action');
     const calculateMaterialBtn = document.getElementById('calculate-material');
     const clearHistoryBtn = document.getElementById('clear-history');
     const clearMaterialHistoryBtn = document.getElementById('clear-material-history');
@@ -156,6 +159,7 @@ function setupEventListeners() {
 
     if (addMaterialBtn) addMaterialBtn.addEventListener('click', addNewMaterial);
     if (removeMaterialBtn) removeMaterialBtn.addEventListener('click', removeMaterial);
+    if (managementActionSelect) managementActionSelect.addEventListener('change', handleManagementAction);
     if (calculateMaterialBtn) calculateMaterialBtn.addEventListener('click', calculateMaterialPrice);
     if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearBasicHistory);
     if (clearMaterialHistoryBtn) clearMaterialHistoryBtn.addEventListener('click', clearMaterialHistory);
@@ -187,6 +191,24 @@ function showSelector() {
     document.querySelector('.calculator-selector').style.display = 'grid';
     document.getElementById('basic-calculator').style.display = 'none';
     document.getElementById('material-calculator').style.display = 'none';
+}
+
+// Material Management Functions
+function handleManagementAction() {
+    const action = document.getElementById('management-action').value;
+    const addForm = document.getElementById('add-material-form');
+    const removeForm = document.getElementById('remove-material-form');
+    
+    // Hide both forms first
+    if (addForm) addForm.style.display = 'none';
+    if (removeForm) removeForm.style.display = 'none';
+    
+    // Show the appropriate form based on selection
+    if (action === 'add' && addForm) {
+        addForm.style.display = 'block';
+    } else if (action === 'remove' && removeForm) {
+        removeForm.style.display = 'block';
+    }
 }
 
 // Basic Calculator Functions
@@ -340,22 +362,27 @@ function updateMaterialDropdowns() {
 function updateMaterialCalculation() {
     const widthMM = parseFloat(document.getElementById('width').value) || 0;
     const heightMM = parseFloat(document.getElementById('height').value) || 0;
+    const quantity = parseInt(document.getElementById('quantity').value) || 1;
     const selectedMaterial = document.getElementById('material-select').value;
     
-    // Calculate area in mm²
+    // Calculate area in mm² per piece
     const areaMM2 = widthMM * heightMM;
     document.getElementById('area-result').textContent = areaMM2.toLocaleString();
+    document.getElementById('quantity-result').textContent = quantity;
     
     if (selectedMaterial && materials[selectedMaterial]) {
         const pricePerSqm = materials[selectedMaterial];
         // Convert mm² to m² for price calculation (1 m² = 1,000,000 mm²)
         const areaM2 = areaMM2 / 1000000;
-        const totalPrice = areaM2 * pricePerSqm;
+        const unitPrice = areaM2 * pricePerSqm;
+        const totalPrice = unitPrice * quantity;
         
         document.getElementById('price-per-sqm').textContent = `R ${pricePerSqm.toFixed(2)}`;
+        document.getElementById('unit-price').textContent = `R ${unitPrice.toFixed(2)}`;
         document.getElementById('total-price').textContent = `R ${totalPrice.toFixed(2)}`;
     } else {
         document.getElementById('price-per-sqm').textContent = 'R 0.00';
+        document.getElementById('unit-price').textContent = 'R 0.00';
         document.getElementById('total-price').textContent = 'R 0.00';
     }
     
@@ -366,6 +393,7 @@ function updateMaterialCalculation() {
 function calculateMaterialPrice() {
     const widthMM = parseFloat(document.getElementById('width').value);
     const heightMM = parseFloat(document.getElementById('height').value);
+    const quantity = parseInt(document.getElementById('quantity').value) || 1;
     const selectedMaterial = document.getElementById('material-select').value;
     
     if (!widthMM || !heightMM || !selectedMaterial) {
@@ -378,12 +406,18 @@ function calculateMaterialPrice() {
         return;
     }
     
-    // Calculate area in mm²
+    if (quantity <= 0) {
+        alert('Quantity must be greater than zero.');
+        return;
+    }
+    
+    // Calculate area in mm² per piece
     const areaMM2 = widthMM * heightMM;
     // Convert to m² for price calculation
     const areaM2 = areaMM2 / 1000000;
     const pricePerSqm = materials[selectedMaterial];
-    const totalPrice = areaM2 * pricePerSqm;
+    const unitPrice = areaM2 * pricePerSqm;
+    const totalPrice = unitPrice * quantity;
     
     const timestamp = new Date().toLocaleString();
     const calculation = {
@@ -391,9 +425,11 @@ function calculateMaterialPrice() {
         material: selectedMaterial,
         widthMM: widthMM,
         heightMM: heightMM,
+        quantity: quantity,
         areaMM2: areaMM2,
         areaM2: areaM2,
         pricePerSqm: pricePerSqm,
+        unitPrice: unitPrice,
         totalPrice: totalPrice
     };
     
@@ -483,10 +519,15 @@ function updateMaterialHistory() {
         materialHistory.forEach(calc => {
             const historyItem = document.createElement('div');
             historyItem.className = 'history-item';
+            
+            // Check if quantity exists (for backward compatibility)
+            const quantityText = calc.quantity ? `${calc.quantity}x ` : '';
+            const unitPriceText = calc.unitPrice ? ` (R${calc.unitPrice.toFixed(2)} each)` : '';
+            
             historyItem.innerHTML = `
                 <div class="history-timestamp">${calc.timestamp}</div>
                 <div class="history-calculation">
-                    ${calc.material}: ${calc.widthMM}mm × ${calc.heightMM}mm = ${calc.areaMM2.toLocaleString()}mm² (${calc.areaM2.toFixed(4)}m²) × R${calc.pricePerSqm.toFixed(2)} = <strong>R${calc.totalPrice.toFixed(2)}</strong>
+                    ${quantityText}${calc.material}: ${calc.widthMM}mm × ${calc.heightMM}mm = ${calc.areaMM2.toLocaleString()}mm² (${calc.areaM2.toFixed(4)}m²) × R${calc.pricePerSqm.toFixed(2)}${unitPriceText} = <strong>R${calc.totalPrice.toFixed(2)}</strong>
                 </div>
             `;
             historyList.appendChild(historyItem);
@@ -506,6 +547,7 @@ function clearMaterialHistory() {
 function addToTotal() {
     const widthMM = parseFloat(document.getElementById('width').value);
     const heightMM = parseFloat(document.getElementById('height').value);
+    const quantity = parseInt(document.getElementById('quantity').value) || 1;
     const selectedMaterial = document.getElementById('material-select').value;
     
     if (!widthMM || !heightMM || !selectedMaterial) {
@@ -518,19 +560,27 @@ function addToTotal() {
         return;
     }
     
+    if (quantity <= 0) {
+        alert('Quantity must be greater than zero.');
+        return;
+    }
+    
     const areaMM2 = widthMM * heightMM;
     const areaM2 = areaMM2 / 1000000;
     const pricePerSqm = materials[selectedMaterial];
-    const totalPrice = areaM2 * pricePerSqm;
+    const unitPrice = areaM2 * pricePerSqm;
+    const totalPrice = unitPrice * quantity;
     
     const item = {
         id: Date.now(), // Simple unique ID
         material: selectedMaterial,
         widthMM: widthMM,
         heightMM: heightMM,
+        quantity: quantity,
         areaMM2: areaMM2,
         areaM2: areaM2,
         pricePerSqm: pricePerSqm,
+        unitPrice: unitPrice,
         totalPrice: totalPrice,
         timestamp: new Date().toLocaleString()
     };
@@ -589,10 +639,11 @@ function updateTotalDisplay() {
                 itemDiv.className = 'total-item';
                 itemDiv.innerHTML = `
                     <div class="total-item-details">
-                        ${item.material}: ${item.widthMM}mm × ${item.heightMM}mm
+                        ${item.quantity}x ${item.material}: ${item.widthMM}mm × ${item.heightMM}mm
+                        <small style="color: #888;">(R${item.unitPrice.toFixed(2)} each)</small>
                     </div>
                     <div class="total-item-price">R${item.totalPrice.toFixed(2)}</div>
-                    <button class="total-item-remove" onclick="removeFromTotal(${item.id})">
+                    <button class="total-item-remove" onclick="removeFromTotal(${item.id})">>
                         <i class="fas fa-times"></i>
                     </button>
                 `;

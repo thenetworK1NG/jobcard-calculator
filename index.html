@@ -9,80 +9,131 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <div class="container">
+        
+    <!-- Background video (looping) -->
+    <video id="bg-video" autoplay muted loop playsinline>
+        <!-- file in workspace has name with a space before the dot: 'BG .mp4' -->
+        <source src="BG .mp4" type="video/mp4">
+        <!-- fallback text -->
+    </video>
+
+    <script>
+        // Fallback: if the video can't play the primary source, try the alternate filename (without space)
+        (function(){
+            const vid = document.getElementById('bg-video');
+            vid.addEventListener('error', () => {
+                // try alternate name
+                const src = vid.querySelector('source');
+                if (src && src.getAttribute('src') !== 'BG.mp4') {
+                    src.setAttribute('src', 'BG.mp4');
+                    vid.load();
+                }
+            });
+        })();
+    </script>
+
+        <div class="container">
         <header class="header">
-            <div class="header-content">
-                <div class="theme-toggle">
-                    <button id="theme-toggle" class="theme-toggle-btn">
-                        <i class="fas fa-moon"></i>
-                    </button>
+            <div class="liquidGlass-wrapper">
+                <div class="liquidGlass-effect"></div>
+                <div class="liquidGlass-tint"></div>
+                <div class="liquidGlass-shine"></div>
+                <div class="liquidGlass-content">
+                    <div class="header-content">
+                        <div class="theme-toggle">
+                            <button id="theme-toggle" class="theme-toggle-btn">
+                                <i class="fas fa-moon"></i>
+                            </button>
+                        </div>
+                        <h1><i class="fas fa-calculator"></i> Web Calculator Suite</h1>
+                        <p>Choose your calculator type</p>
+                    </div>
                 </div>
-                <h1><i class="fas fa-calculator"></i> Web Calculator Suite</h1>
-                <p>Choose your calculator type</p>
             </div>
         </header>
 
         <div class="calculator-selector">
             <div class="calculator-card" onclick="showCalculator('basic')">
-                <div class="card-icon">
-                    <i class="fas fa-calculator"></i>
+                <div class="liquidGlass-wrapper">
+                    <div class="liquidGlass-effect"></div>
+                    <div class="liquidGlass-tint"></div>
+                    <div class="liquidGlass-shine"></div>
+                    <div class="liquidGlass-content">
+                        <div class="card-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3>Basic Calculator</h3>
+                        <p>Standard arithmetic operations with history</p>
+                    </div>
                 </div>
-                <h3>Basic Calculator</h3>
-                <p>Standard arithmetic operations with history</p>
             </div>
 
             <div class="calculator-card" onclick="showCalculator('material')">
-                <div class="card-icon">
-                    <i class="fas fa-industry"></i>
+                <div class="liquidGlass-wrapper">
+                    <div class="liquidGlass-effect"></div>
+                    <div class="liquidGlass-tint"></div>
+                    <div class="liquidGlass-shine"></div>
+                    <div class="liquidGlass-content">
+                        <div class="card-icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        <h3>Material Price Calculator</h3>
+                        <p>Calculate material costs with custom formulas</p>
+                    </div>
                 </div>
-                <h3>Material Price Calculator</h3>
-                <p>Calculate material costs with custom formulas</p>
             </div>
         </div>
 
         <!-- Basic Calculator -->
         <div id="basic-calculator" class="calculator-container" style="display: none;">
-            <div class="calculator-header">
-                <h2><i class="fas fa-calculator"></i> Basic Calculator</h2>
-                <button class="back-btn" onclick="showSelector()">
-                    <i class="fas fa-arrow-left"></i> Back
-                </button>
-            </div>
+            <div class="liquidGlass-wrapper">
+                <div class="liquidGlass-effect"></div>
+                <div class="liquidGlass-tint"></div>
+                <div class="liquidGlass-shine"></div>
+                <div class="liquidGlass-content">
+                    <div class="calculator-header">
+                        <h2><i class="fas fa-calculator"></i> Basic Calculator</h2>
+                        <button class="back-btn" onclick="showSelector()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                    </div>
 
-            <div class="basic-calc">
-                <div class="display-container">
-                    <input type="text" id="display" class="display" value="0" readonly>
-                </div>
+                    <div class="basic-calc">
+                        <div class="display-container">
+                            <input type="text" id="display" class="display" value="0" readonly>
+                        </div>
 
-                <div class="history-section">
-                    <h4>History</h4>
-                    <div id="history" class="history-box"></div>
-                    <button id="clear-history" class="clear-history-btn">Clear History</button>
-                </div>
+                        <div class="history-section">
+                            <h4>History</h4>
+                            <div id="history" class="history-box"></div>
+                            <button id="clear-history" class="clear-history-btn">Clear History</button>
+                        </div>
 
-                <div class="button-grid">
-                    <button class="btn btn-number" onclick="inputNumber('7')">7</button>
-                    <button class="btn btn-number" onclick="inputNumber('8')">8</button>
-                    <button class="btn btn-number" onclick="inputNumber('9')">9</button>
-                    <button class="btn btn-operator" onclick="inputOperator('/')">/</button>
+                        <div class="button-grid">
+                            <button class="btn btn-number" onclick="inputNumber('7')">7</button>
+                            <button class="btn btn-number" onclick="inputNumber('8')">8</button>
+                            <button class="btn btn-number" onclick="inputNumber('9')">9</button>
+                            <button class="btn btn-operator" onclick="inputOperator('/')">/</button>
 
-                    <button class="btn btn-number" onclick="inputNumber('4')">4</button>
-                    <button class="btn btn-number" onclick="inputNumber('5')">5</button>
-                    <button class="btn btn-number" onclick="inputNumber('6')">6</button>
-                    <button class="btn btn-operator" onclick="inputOperator('*')">*</button>
+                            <button class="btn btn-number" onclick="inputNumber('4')">4</button>
+                            <button class="btn btn-number" onclick="inputNumber('5')">5</button>
+                            <button class="btn btn-number" onclick="inputNumber('6')">6</button>
+                            <button class="btn btn-operator" onclick="inputOperator('*')">*</button>
 
-                    <button class="btn btn-number" onclick="inputNumber('1')">1</button>
-                    <button class="btn btn-number" onclick="inputNumber('2')">2</button>
-                    <button class="btn btn-number" onclick="inputNumber('3')">3</button>
-                    <button class="btn btn-operator" onclick="inputOperator('-')">-</button>
+                            <button class="btn btn-number" onclick="inputNumber('1')">1</button>
+                            <button class="btn btn-number" onclick="inputNumber('2')">2</button>
+                            <button class="btn btn-number" onclick="inputNumber('3')">3</button>
+                            <button class="btn btn-operator" onclick="inputOperator('-')">-</button>
 
-                    <button class="btn btn-number" onclick="inputNumber('0')">0</button>
-                    <button class="btn btn-number" onclick="inputOperator('.')">.</button>
-                    <button class="btn btn-clear" onclick="clearDisplay()">C</button>
-                    <button class="btn btn-operator" onclick="inputOperator('+')">+</button>
+                            <button class="btn btn-number" onclick="inputNumber('0')">0</button>
+                            <button class="btn btn-number" onclick="inputOperator('.')">.</button>
+                            <button class="btn btn-clear" onclick="clearDisplay()">C</button>
+                            <button class="btn btn-operator" onclick="inputOperator('+')">+</button>
 
-                    <button class="btn btn-equals" onclick="calculate()">=</button>
-                    <button class="btn btn-tax" onclick="calculateTax()">Tax 15%</button>
+                            <button class="btn btn-equals" onclick="calculate()">=</button>
+                            <button class="btn btn-tax" onclick="calculateTax()">Tax 15%</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -99,8 +150,13 @@
             <div class="material-calc">
                 <!-- Dimensions Input -->
                 <div class="input-section">
-                    <h3>Dimensions</h3>
-                    <div class="dimension-inputs">
+                    <div class="liquidGlass-wrapper">
+                        <div class="liquidGlass-effect"></div>
+                        <div class="liquidGlass-tint"></div>
+                        <div class="liquidGlass-shine"></div>
+                        <div class="liquidGlass-content">
+                            <h3>Dimensions</h3>
+                            <div class="dimension-inputs">
                         <div class="input-group">
                             <label for="width">Width (mm):</label>
                             <input type="number" id="width" step="1" min="0" placeholder="0">
@@ -109,88 +165,136 @@
                             <label for="height">Height (mm):</label>
                             <input type="number" id="height" step="1" min="0" placeholder="0">
                         </div>
+                        <div class="input-group">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" step="1" min="1" value="1" placeholder="1">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Material Selection -->
                 <div class="input-section">
-                    <h3>Material Selection</h3>
-                    <select id="material-select">
-                        <option value="">Select a material...</option>
-                    </select>
+                    <div class="liquidGlass-wrapper">
+                        <div class="liquidGlass-effect"></div>
+                        <div class="liquidGlass-tint"></div>
+                        <div class="liquidGlass-shine"></div>
+                        <div class="liquidGlass-content">
+                            <h3>Material Selection</h3>
+                            <select id="material-select">
+                                <option value="">Select a material...</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Results -->
                 <div class="results-section">
-                    <div class="result-item">
-                        <label>Area (mm²):</label>
-                        <span id="area-result">0</span>
-                    </div>
-                    <div class="result-item">
-                        <label>Price per m²:</label>
-                        <span id="price-per-sqm">R 0.00</span>
-                    </div>
-                    <div class="result-item total">
-                        <label>Total Price:</label>
-                        <span id="total-price">R 0.00</span>
+                    <div class="liquidGlass-wrapper">
+                        <div class="liquidGlass-effect"></div>
+                        <div class="liquidGlass-tint"></div>
+                        <div class="liquidGlass-shine"></div>
+                        <div class="liquidGlass-content">
+                            <div class="result-item">
+                                <label>Area (mm²):</label>
+                                <span id="area-result">0</span>
+                            </div>
+                            <div class="result-item">
+                                <label>Quantity:</label>
+                                <span id="quantity-result">1</span>
+                            </div>
+                            <div class="result-item">
+                                <label>Price per m²:</label>
+                                <span id="price-per-sqm">R 0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <label>Unit Price:</label>
+                                <span id="unit-price">R 0.00</span>
+                            </div>
+                            <div class="result-item total">
+                                <label>Total Price:</label>
+                                <span id="total-price">R 0.00</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Calculate Button -->
-                <button id="calculate-material" class="calculate-btn">
+                <button id="calculate-material" class="calculate-btn glass-btn">
                     <i class="fas fa-calculator"></i> Calculate Price
                 </button>
 
                 <!-- Total Summary Section -->
                 <div class="total-summary">
-                    <h3>Running Total</h3>
-                    <div class="total-items">
-                        <div id="total-items-list" class="total-items-list"></div>
-                        <div class="total-controls">
-                            <button id="add-to-total" class="add-total-btn">
-                                <i class="fas fa-plus"></i> Add to Total
-                            </button>
-                            <button id="clear-total" class="clear-total-btn">
-                                <i class="fas fa-trash"></i> Clear Total
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="total-calculations">
-                        <div class="total-row">
-                            <label>Subtotal:</label>
-                            <span id="subtotal">R 0.00</span>
-                        </div>
-                        <div class="total-row">
-                            <label>Tax (15%):</label>
-                            <span id="tax-amount">R 0.00</span>
-                        </div>
-                        <div class="total-row grand-total">
-                            <label>Grand Total:</label>
-                            <span id="grand-total">R 0.00</span>
-                        </div>
-                    </div>
+                    <div class="liquidGlass-wrapper">
+                        <div class="liquidGlass-effect"></div>
+                        <div class="liquidGlass-tint"></div>
+                        <div class="liquidGlass-shine"></div>
+                        <div class="liquidGlass-content">
+                            <h3>Running Total</h3>
+                            <div class="total-items">
+                                <div id="total-items-list" class="total-items-list"></div>
+                                <div class="total-controls">
+                                    <button id="add-to-total" class="add-total-btn">
+                                        <i class="fas fa-plus"></i> Add to Total
+                                    </button>
+                                    <button id="clear-total" class="clear-total-btn">
+                                        <i class="fas fa-trash"></i> Clear Total
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="total-calculations">
+                                <div class="total-row">
+                                    <label>Subtotal:</label>
+                                    <span id="subtotal">R 0.00</span>
+                                </div>
+                                <div class="total-row">
+                                    <label>Tax (15%):</label>
+                                    <span id="tax-amount">R 0.00</span>
+                                </div>
+                                <div class="total-row grand-total">
+                                    <label>Grand Total:</label>
+                                    <span id="grand-total">R 0.00</span>
+                                </div>
+                            </div>
 
-                    <div class="total-actions">
-                        <button id="apply-tax" class="tax-btn">
-                            <i class="fas fa-percentage"></i> Apply 15% Tax
-                        </button>
-                        <button id="remove-tax" class="remove-tax-btn">
-                            <i class="fas fa-minus"></i> Remove Tax
-                        </button>
-                        <button id="save-pdf" class="pdf-btn">
-                            <i class="fas fa-file-pdf"></i> Save as PDF
-                        </button>
+                            <div class="total-actions">
+                                <button id="apply-tax" class="tax-btn">
+                                    <i class="fas fa-percentage"></i> Apply 15% Tax
+                                </button>
+                                <button id="remove-tax" class="remove-tax-btn">
+                                    <i class="fas fa-minus"></i> Remove Tax
+                                </button>
+                                <button id="save-pdf" class="pdf-btn">
+                                    <i class="fas fa-file-pdf"></i> Save as PDF
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Material Management -->
                 <div class="material-management">
-                    <h3>Material Management</h3>
-                    
-                    <div class="add-material-section">
-                        <h4>Add New Material</h4>
-                        <div class="add-material-form">
+                    <div class="liquidGlass-wrapper">
+                        <div class="liquidGlass-effect"></div>
+                        <div class="liquidGlass-tint"></div>
+                        <div class="liquidGlass-shine"></div>
+                        <div class="liquidGlass-content">
+                            <h3>Material Management</h3>
+                            
+                            <div class="management-dropdown-section">
+                        <div class="input-group">
+                            <label for="management-action">Action:</label>
+                            <select id="management-action">
+                                <option value="">Select an action...</option>
+                                <option value="add">Add New Material</option>
+                                <option value="remove">Remove Material</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Add Material Form (hidden by default) -->
+                        <div id="add-material-form" class="management-form" style="display: none;">
                             <div class="input-group">
                                 <label for="new-material-name">Material Name:</label>
                                 <input type="text" id="new-material-name" placeholder="Enter material name">
@@ -207,14 +311,15 @@
                                 <i class="fas fa-plus"></i> Add Material
                             </button>
                         </div>
-                    </div>
-
-                    <div class="remove-material-section">
-                        <h4>Remove Material</h4>
-                        <div class="remove-material-form">
-                            <select id="remove-material-select">
-                                <option value="">Select material to remove...</option>
-                            </select>
+                        
+                        <!-- Remove Material Form (hidden by default) -->
+                        <div id="remove-material-form" class="management-form" style="display: none;">
+                            <div class="input-group">
+                                <label for="remove-material-select">Material to Remove:</label>
+                                <select id="remove-material-select">
+                                    <option value="">Select material to remove...</option>
+                                </select>
+                            </div>
                             <button id="remove-material" class="remove-btn">
                                 <i class="fas fa-trash"></i> Remove Material
                             </button>
@@ -224,13 +329,77 @@
 
                 <!-- Calculation History -->
                 <div class="calculation-history">
-                    <h3>Calculation History</h3>
-                    <div id="material-history" class="history-list"></div>
-                    <button id="clear-material-history" class="clear-history-btn">Clear History</button>
+                    <div class="liquidGlass-wrapper">
+                        <div class="liquidGlass-effect"></div>
+                        <div class="liquidGlass-tint"></div>
+                        <div class="liquidGlass-shine"></div>
+                        <div class="liquidGlass-content">
+                            <h3>Calculation History</h3>
+                            <div id="material-history" class="history-list"></div>
+                            <button id="clear-material-history" class="clear-history-btn">Clear History</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- SVG Filter for Liquid Glass Effect -->
+    <svg style="display: none">
+        <filter
+            id="glass-distortion"
+            x="0%"
+            y="0%"
+            width="100%"
+            height="100%"
+            filterUnits="objectBoundingBox"
+        >
+            <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.01 0.01"
+                numOctaves="1"
+                seed="5"
+                result="turbulence"
+            />
+
+            <feComponentTransfer in="turbulence" result="mapped">
+                <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
+                <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
+                <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
+            </feComponentTransfer>
+
+            <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
+
+            <feSpecularLighting
+                in="softMap"
+                surfaceScale="5"
+                specularConstant="1"
+                specularExponent="100"
+                lighting-color="white"
+                result="specLight"
+            >
+                <fePointLight x="-200" y="-200" z="300" />
+            </feSpecularLighting>
+
+            <feComposite
+                in="specLight"
+                operator="arithmetic"
+                k1="0"
+                k2="1"
+                k3="1"
+                k4="0"
+                result="litImage"
+            />
+
+            <feDisplacementMap
+                in="SourceGraphic"
+                in2="softMap"
+                scale="50"
+                xChannelSelector="R"
+                yChannelSelector="G"
+            />
+        </filter>
+    </svg>
 
     <script src="script.js"></script>
 </body>
